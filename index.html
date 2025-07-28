@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="/MainCode/style.css">
     <style>
 #container-dydd {
-    display: flex;
-    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     gap: 15px;
@@ -36,6 +34,9 @@ input:focus {
 }
 
 .btn-dydd, #copyButton {
+        position: relative;
+    left: 50%;
+    transform: translateX(-50%);
     background-color: rgba(var(--blue), 0.9);
     color: rgba(var(--white), 1);
     border: none;
@@ -72,6 +73,8 @@ input:focus {
     margin-bottom: 10px;
     background-color: rgba(var(--blue), 0.8);
 }
+
+        .dydd-input{text-align: center;}
     </style>
 </head>
 <body id="html-body">
@@ -87,10 +90,10 @@ input:focus {
 
         <br>
 <div id="container-dydd">
-        <div>
+        <div class="dydd-input">
             wikidot.com/<input type="text" size="5" id="url" /><br>
             数量：<input type="text" id="input" size="3" min="1" />
-        </div>
+        </div><br>
         <button class="btn-dydd" onclick="generateCode()">生成</button>
     </div>
     <pre class="hw" style="white-space: pre-wrap;"></pre>
