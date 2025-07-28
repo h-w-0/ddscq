@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单页迭代生成器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/MainCode/style.css">
+    <style>
+#container-dydd {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    background: rgba(var(--blue), 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(var(--black), 0.1);
+    margin-bottom: 20px;
+}
+
+input {
+    padding: 8px 12px;
+    border: 1px solid rgba(var(--blue), 0.5);
+    border-radius: 4px;
+    background: rgba(var(--white), 0.9);
+    color: rgba(var(--black), 1);
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: rgba(var(--blue), 0.8);
+    box-shadow: 0 0 0 2px rgba(var(--blue), 0.2);
+}
+
+.btn-dydd, #copyButton {
+    background-color: rgba(var(--blue), 0.9);
+    color: rgba(var(--white), 1);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.btn-dydd:hover, #copyButton:hover {
+    background-color: rgba(var(--blue-d), 1);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(var(--blue-d), 0.3);
+}
+
+.hw, .page-source {
+    background-color: rgba(var(--gray), 0.7);
+    border: 1px solid rgba(var(--blue), 0.3);
+    border-radius: 6px;
+    padding: 20px;
+    margin: 15px 0;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: auto;
+    box-shadow: inset 0 2px 4px rgba(var(--black), 0.05);
+}
+
+#copyButton {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: rgba(var(--blue), 0.8);
+}
+    </style>
+</head>
+<body id="html-body">
+    
+    <page-start>
+        <div id="page-title">
+            单页迭代生成器
+        </div>
+        <div id="page-content">
+
+这是HW自制的单页迭代生成器，帮你快速生成单页迭代。<br>
+          <a href="https://backrooms-wiki-cn.wikidot.com/hyper-page-changer-generator">后室中文版</a>
+
+        <br>
+<div id="container-dydd">
+        <div>
+            wikidot.com/<input type="text" size="5" id="url" /><br>
+            数量：<input type="text" id="input" size="3" min="1" />
+        </div>
+        <button class="btn-dydd" onclick="generateCode()">生成</button>
+    </div>
+    <pre class="hw" style="white-space: pre-wrap;"></pre>
+
+    <script>
+        let hw = '';
+
+        function generateCode() {
+            var url = document.getElementById("url").value;
+            const input = document.getElementById('input').value;
+
+            hw = '';
+
+            for (let i = 1; i <= input; i++) {
+                hw += `[[module ListPages ${i === 1 ? 'offset="@URL|0"' : `limit="@URL|0" urlAttrPrefix="page${i}"`} range="."]]\n%%content{${i + 1}}%%\n[[/module]]\n`;
+            }
+
+            hw += '[!--\n====\n';
+
+            for (let i = 1; i <= input; i++) {
+                if (i == input) {
+                    hw += `内容${i}\n [/${url} 第1迭代]\n====\n`;
+                } else {
+                    hw += `内容${i}\n [/${url}/offset/1/page${i + 1}_limit/1 第${i + 1}迭代]\n====\n`;
+                }
+            }
+
+            hw += '--]';
+
+            document.querySelector('.hw').innerText = hw;
+
+            if (document.getElementById('copyButton') === null) {
+                const copyButton = document.createElement('button');
+                copyButton.id = 'copyButton';
+                copyButton.textContent = '点击复制';
+                copyButton.onclick = copyHW;
+                document.body.insertBefore(copyButton, document.querySelector('.hw'));
+            }
+        }
+
+        function copyHW() {
+            if(execCopy(hw)){
+            }else {
+                alert('复制失败！');
+            }
+        }
+
+        function execCopy(string){
+            var temp = document.createElement('div');
+            temp.appendChild(document.createElement('pre')).textContent = string;
+            var s = temp.style;
+            s.position = 'fixed';
+            s.left = '-100%';
+            document.body.appendChild(temp);
+            document.getSelection().selectAllChildren(temp);
+            var result = document.execCommand('copy');
+            document.body.removeChild(temp);
+            return result;
+        }
+
+    </script>
+
+        </div>
+    </page-start>
+    
+    
+    <script src="/MainCode/script.js"></script>
+</body>
+</html>
